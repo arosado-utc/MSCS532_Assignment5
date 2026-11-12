@@ -123,13 +123,31 @@ def quick_sort(a, stats=None):
     return a
 
 
-def quick_sort_random(a):
+def quick_sort_random(a, stats=None):
     """Sort a list of comparable elements IN PLACE in increasing order.
 
     Randomized pivot choice: a uniformly random element of the
-    subarray. Stub until the partition is in place.
+    subarray, picked fresh for every partition. No input order is
+    a guaranteed worst case anymore - on every input the expected
+    number of comparisons is the same, about 2 n ln n, and hitting
+    the quadratic case would take n unlucky pivots in a row.
+
+    Parameters: a     - list of comparable elements
+                stats - optional dict; if given, filled with the
+                        running "comparisons" and "swaps" counts
+    Return:    the same list object, sorted in increasing order
+
+    Complexity:
+        Time   - O(n log n) expected on every input; the O(n^2)
+                 worst case still exists for a fixed unlucky pivot
+                 sequence but is no longer tied to the input order.
+        Space  - O(log n) call stack in all cases, same driver as
+                 the deterministic variant.
     """
-    raise NotImplementedError("randomized quick sort not implemented yet")
+    if len(a) < 2:
+        return a
+    _quicksort(a, 0, len(a) - 1, randomize=True, stats=stats)
+    return a
 
 
 def main():
@@ -142,6 +160,7 @@ def main():
     for sample in samples:
         print(f"input:      {sample}")
         print(f"quick_sort: {quick_sort(sample[:])}")
+        print(f"randomized: {quick_sort_random(sample[:])}")
         print()
 
 
